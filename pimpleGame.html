@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&display=swap');
+
+        body {
+            background-image: url(./images/bgg.jpg);
+            font-family: 'Noto Sans TC', sans-serif;
+            background-size: contain;
+            /* background-repeat: no-repeat; */
+
+        }
+
+        #face {
+            width: 768px;
+            height: 768px;
+            background-image: url("./images/face.png");
+            margin: auto;
+            cursor: url(./images/finger.png) 50 50, auto;
+        }
+
+        #face:active {
+            cursor: url(./images/fingerTouch.png) 50 50, auto;
+        }
+
+        #faceMain {
+            width: 551px;
+            height: 445px;
+            background-image: url("./images/faceMain.gif");
+            position: relative;
+            left: 105px;
+            top: 232px;
+        }
+
+
+        p {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #btn-start {
+            width: 300px;
+            height: 300px;
+            font-size: 80px;
+            color: seashell;
+            background-color: crimson;
+            box-shadow: #333 0px 0px 15px;
+            border-radius: 50%;
+            border: salmon solid 5px;
+            position: absolute;
+            ;
+            top: calc(50% - 200px);
+            left: calc(50% - 150px);
+        }
+
+        #coverGame {
+            width: 768px;
+            height: 768px;
+            background-color: rgba(10, 10, 10, 0.1);
+            position: relative;
+            top: -445px;
+            font-size: 80px;
+            color: red;
+            text-align: center;
+        }
+
+        #getScore {
+            position: relative;
+            top: -1200px;
+            font-size: 70px;
+            color: red;
+            text-align: center;
+            animation: getScore 2.5s;
+        }
+
+        @keyframes getScore {
+            0% {
+                opacity: 0;
+                font-size: 0px;
+
+            }
+
+            100% {
+                opacity: 1;
+                font-size: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="face">
+        <div id="faceMain"></div>
+        <div id="coverGame"></div>
+    </div>
+    <p><input type="button" value="PLAY" id="btn-start"></p>
+    <p>目前分數：<span id="text-score">0</span>分</p>
+    <p>剩餘時間：<span id="text-time">30</span>秒</p>
+    <script>
+        const face = document.getElementById("face");
+        const faceMain = document.getElementById("faceMain");
+        const btnStart = document.getElementById("btn-start");
+        const textScore = document.getElementById("text-score");
+        const textTime = document.getElementById("text-time");
+        const coverGame = document.getElementById("coverGame")
+        const uhh = new Audio();
+        uhh.src = "./images/uhh.mp3";
+        const hmnn = new Audio();
+        hmnn.src = "./images/hmnn.wav";
+        const ouch4 = new Audio();
+        ouch4.src = "./images/ouch4.wav";
+
+        let inGame = false;
+        let score = 0;
+        let timeleft = 30;
+        let timer = 0;
+        let i = 0;
+        // 遊戲開始按鈕
+        btnStart.onclick = () => {
+            // 隱藏按鈕
+            btnStart.style.display = "none";
+            // btnStart.disabled = true;
+            timer = setInterval(game, 1000);
+            game();
+            inGame = true;
+            score = 0;
+            textScore.innerText = score;
+            timeleft = 30;
+            textTime.innerText = timeleft;
+            faceMain.innerHTML = "";
+            coverGame.style.display = "none";
+            const getScore = document.createElement("div");
+            getScore.id = "getScore";
+            face.appendChild(getScore);
+            getScore.innerText = "";
+        }
+
+        const game = () => {
+            // 臉加痘痘
+            faceMain.innerHTML += `<img src="./images/pimple.png" width="35" height="35" id="pimpleRandom${i}" class="pimples">`
+            var pimpleRandom = document.getElementById(`pimpleRandom${i}`);
+
+            //設定隨機位置 
+            var x = 0, y = 0;
+            var w = faceMain.offsetWidth - 35, h = faceMain.offsetHeight - 35;
+            x = Math.round(Math.random() * (w));
+            y = Math.round(Math.random() * (h));
+            z = Math.round(Math.random() * 55 + 35);
+            pimpleRandom.style.left = x + "px";
+            pimpleRandom.style.top = y + "px";
+            pimpleRandom.style.width = z + "px";
+            pimpleRandom.style.height = z + "px";
+            pimpleRandom.style.position = "absolute";
+            i++;
+
+            // 數字大於五產生痘痘
+            num = Math.round(Math.random() * 10);
+            if (num > 5) {
+                faceMain.innerHTML += `<img src="./images/pimple.png" width="50" height="50" id="pimpleNum${i}" class="pimples">`
+                var pimpleNum = document.getElementById(`pimpleNum${i}`);
+
+                var x2 = 0, y2 = 0;
+                x2 = Math.round(Math.random() * (w));
+                y2 = Math.round(Math.random() * (h));
+                z2 = Math.round(Math.random() * 55 + 50);
+
+                pimpleNum.style.left = x2 + "px";
+                pimpleNum.style.top = y2 + "px";
+                pimpleNum.style.width = z2 + "px";
+                pimpleNum.style.height = z2 + "px";
+                pimpleNum.style.position = "absolute";
+                i++;
+
+            }
+
+            //時間減一
+            timeleft--;
+            textTime.innerText = timeleft;
+
+            const pimples = document.getElementsByClassName("pimples");
+            for (let pimple of pimples) {
+                pimple.onclick = () => {
+                    //  console.log(pimple)
+                    if (pimple.classList.contains("pimples")) {
+                        pimple.setAttribute("src", "./images/scar.png ")
+                        pimple.classList.remove("pimples")
+                        score++;
+                        textScore.innerText = score;
+                        if (pimples.length % 2 == 0) {
+                            uhh.play();
+                        }
+                        else {
+                            hmnn.play();
+                        }
+                    }
+                }
+                // 如果痘痘等於7顆的倍數，產生音效
+                if (pimples.length % 6 == 0) {
+                    ouch4.play();
+                }
+
+                //遊戲結束後一秒，沒被擠到的痘痘爆血 
+                setTimeout(() => {
+                    pimple.setAttribute("src", "./images/blood.png ")
+                    pimple.classList.remove("pimples")
+                }, 1500)
+            }
+
+            if (timeleft == 0) {
+                inGame = false;
+                clearInterval(timer);
+                // btnStart.disabled = false;
+                coverGame.style.display = "";
+                getScore.innerText = `遊戲結束，你獲得${score}分`;
+                setTimeout(() => {
+                    // alert(`你得到${score}分`);
+                    btnStart.style.display = "";
+                    btnStart.value = "";
+                    btnStart.style.backgroundImage = 'url("./images/replay.png")';
+                    btnStart.style.backgroundColor = "";
+                    btnStart.style.opacity = 0.5;
+                }, 5000);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
