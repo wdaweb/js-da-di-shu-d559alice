@@ -97,6 +97,7 @@
     <div id="face">
         <div id="faceMain"></div>
         <div id="coverGame"></div>
+        <div id="getScore"></div>
     </div>
     <p><input type="button" value="PLAY" id="btn-start"></p>
     <p>目前分數：<span id="text-score">0</span>分</p>
@@ -134,9 +135,7 @@
             textTime.innerText = timeleft;
             faceMain.innerHTML = "";
             coverGame.style.display = "none";
-            const getScore = document.createElement("div");
-            getScore.id = "getScore";
-            face.appendChild(getScore);
+            getScore.style.display = "none"
             getScore.innerText = "";
         }
 
@@ -216,6 +215,7 @@
                 clearInterval(timer);
                 // btnStart.disabled = false;
                 coverGame.style.display = "";
+                getScore.style.display = "";
                 getScore.innerText = `遊戲結束，你獲得${score}分`;
                 setTimeout(() => {
                     // alert(`你得到${score}分`);
